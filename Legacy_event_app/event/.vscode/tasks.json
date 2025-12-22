@@ -1,0 +1,68 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Maven: Clean",
+      "type": "shell",
+      "command": "mvn clean",
+      "group": "build",
+      "problemMatcher": []
+    },
+    {
+      "label": "Maven: Compile",
+      "type": "shell",
+      "command": "mvn compile",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$javaCompiler"]
+    },
+    {
+      "label": "Maven: Package",
+      "type": "shell",
+      "command": "mvn package",
+      "group": "build",
+      "problemMatcher": ["$javaCompiler"]
+    },
+    {
+      "label": "Maven: Run Jetty Server",
+      "type": "shell",
+      "command": "mvn jetty:run",
+      "group": "test",
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "^.*$",
+          "file": 1,
+          "location": 2,
+          "message": 3
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": "^.*Building.*$",
+          "endsPattern": "^.*Started Jetty Server.*$"
+        }
+      }
+    },
+    {
+      "label": "Setup: Run Database Setup",
+      "type": "shell",
+      "command": "start",
+      "args": ["http://localhost:8080/event/setupDb.jsp"],
+      "windows": {
+        "command": "start",
+        "args": ["http://localhost:8080/event/setupDb.jsp"]
+      },
+      "linux": {
+        "command": "xdg-open",
+        "args": ["http://localhost:8080/event/setupDb.jsp"]
+      },
+      "osx": {
+        "command": "open",
+        "args": ["http://localhost:8080/event/setupDb.jsp"]
+      },
+      "problemMatcher": []
+    }
+  ]
+}

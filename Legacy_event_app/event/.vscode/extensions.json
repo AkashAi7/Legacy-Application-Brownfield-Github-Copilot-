@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "vscjava.vscode-java-pack",
+    "github.copilot",
+    "github.copilot-chat",
+    "adashen.vscode-tomcat",
+    "redhat.java",
+    "vscjava.vscode-maven",
+    "alexcvzz.vscode-sqlite",
+    "rangav.vscode-thunder-client"
+  ]
+}

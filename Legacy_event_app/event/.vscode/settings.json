@@ -1,0 +1,21 @@
+{
+  "java.project.sourcePaths": [
+    "src"
+  ],
+  "java.project.outputPath": "build/web/WEB-INF/classes",
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "maven.executable.path": "mvn",
+  "files.exclude": {
+    "**/nbproject": true,
+    "**/*.class": true
+  },
+  "github.copilot.enable": {
+    "*": true,
+    "plaintext": true,
+    "markdown": true,
+    "java": true,
+    "jsp": true
+  },
+  "editor.formatOnSave": true,
+  "java.compile.nullAnalysis.mode": "automatic"
+}
