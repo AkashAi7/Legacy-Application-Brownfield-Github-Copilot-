@@ -778,6 +778,96 @@ Map in web.xml with URL patterns.
 
 ---
 
+
+### 6.5 Protect Against SQL Injection
+
+**Steps:**
+
+1. Analyze existing queries for SQL injection vulnerabilities
+
+Ask Copilot:
+```
+Review all JSP files (login.jsp, nominate.jsp, eventCreate.jsp, approveList.jsp) and identify:
+1. Any SQL queries using string concatenation
+2. Direct use of user input in SQL queries
+3. Missing PreparedStatement usage
+4. Potential SQL injection attack vectors
+
+For each vulnerability, explain:
+- How an attacker could exploit it
+- Example attack payload
+- Severity rating (Critical/High/Medium)
+```
+
+2. Create SQL Injection test cases
+
+Create file: `test/com/company/event/security/SQLInjectionTest.java`
+
+Ask Copilot:
+```
+Create test cases that attempt SQL injection attacks:
+1. Login bypass: username = "admin' OR '1'='1"
+2. Data extraction: username = "admin'; SELECT * FROM users--"
+3. Table deletion: eventName = "Test'; DROP TABLE events--"
+4. Union injection: relation = "SELF' UNION SELECT password FROM users--"
+5. Boo4ean-based blind: username = "admin' AND '1'='1"
+
+Each test should:
+- Attempt the injection
+- Verify it's blocked by PreparedStatements
+- Confirm no data corruption occurred
+- Log the attempt for security monitoring
+```
+
+3. Refactor vulnerable code to use PreparedStatements
+
+Ask Copilot:
+```
+Review all repository implementations and ensure:
+1. Every SQL query uses PreparedStatement (not Statement)
+2. All user input is parameterized with ? placeholders
+3. No string concatenation in SQL queries
+4. Example conversion:
+
+Before (vulnerable):
+String sql = "SELECT * FROM users WHERE username='" + username + "'";
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery(sql);
+
+After (safe):
+String sql = "SELECT * FROM users WHERE username=?";
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setString(1, username);
+ResultSet rs = ps.executeQuery();
+
+Apply this to all queries in:
+- UserRepositoryImpl
+- EventRepositoryImpl
+- NominationRepositoryImpl
+```
+
+4. Create SQL Injection prevention utility
+
+Create file: `src/com/company/event/security/SQLInjectionGuard.java`
+
+Ask Copilot:
+```
+Create a utility class that detects potential SQL injection attempts:
+1. detectSQLInjection(String input) - returns boolean
+2. Check for SQL keywords: SELECT, INSERT, UPDATE, DELETE, DROP, UNION, OR
+3. Check for SQL operators: --, /*, */, ', ", ;
+4. Check for SQL functions: CONCAT, SUBSTRING, EXEC, CAST
+5. logSuspiciousInput(String input, String source) - logs attempts
+6. sanitizeForLogging(String input) - safe logging without exposing data
+
+Use this as an additional security layer in servlets before processing input.
+Include JavaDoc explaining this is defense-in-depth, PreparedStatements are primary defense.
+```
+
+
+
+
+
 ## ✅ Exercise 7: Add Validation Framework
 
 **Goal**: Implement comprehensive validation with meaningful error messages.
